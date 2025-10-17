@@ -1,0 +1,20 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "lib-base-helpers.name" . }}-trigger
+  namespace: {{ .Release.Namespace }}
+  labels:
+    {{- include "lib-base-helpers.labels" . | nindent 4 }}
+    {{- if .Values.job.customLabels }}
+    {{- toYaml .Values.job.customLabels | nindent 4 }}
+    {{- end }}
+data:
+  # This ConfigMap forces ArgoCD to detect changes when customLabels change
+  # It ensures automated sync will trigger when runNumber is updated
+  {{- if .Values.job.customLabels }}
+  {{- range $key, $value := .Values.job.customLabels }}
+  {{ $key }}: {{ $value | quote }}
+  {{- end }}
+  {{- end }}
+  lastUpdated: {{ now | date "2006-01-02T15:04:05Z07:00" }}
+
