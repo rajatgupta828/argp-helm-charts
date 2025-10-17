@@ -1,0 +1,28 @@
+version: 0.0.1
+owner: ""
+jobType: Job
+
+containers:
+  main:
+    image:
+      repository: busybox
+      tag: latest
+    command: []
+    resources:
+      limits:
+        cpu: 100m
+        memory: 128Mi
+      requests:
+        cpu: 50m
+        memory: 128Mi
+    environment: {}
+
+linkerd:
+  enabled: false
+
+job:
+  hook: Sync
+  hookDelete: BeforeHookCreation
+  completions: 1
+  ttlSecondsAfterFinished: 300
+  customLabels: {}
